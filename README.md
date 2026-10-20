@@ -106,4 +106,5 @@ Regras principais:
 
 ## Autor
 
-(preencher com seu nome e turma)
+Danilo Calaça 3°D
+
