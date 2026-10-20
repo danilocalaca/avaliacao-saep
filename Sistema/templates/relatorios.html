@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block titulo %}Relatórios | Biblioteca Escolar{% endblock %}
+{% block conteudo %}
+<section class="cabecalho-pagina"><h1>Relatórios</h1><p class="contexto-pagina">Consulte o histórico e a circulação do acervo.</p></section>
+<section class="secao">
+    <h2>Empréstimos por período</h2>
+    <form method="get" class="formulario filtros-relatorio">
+        <div class="campo"><label for="data_inicio">De</label><input id="data_inicio" name="data_inicio" type="date" value="{{ data_inicio }}"></div>
+        <div class="campo"><label for="data_fim">Até</label><input id="data_fim" name="data_fim" type="date" value="{{ data_fim }}"></div>
+        <div class="campo"><label for="situacao">Situação</label><select id="situacao" name="situacao"><option value="">Todas</option>{% for opcao in ['Ativo', 'Atrasado', 'Devolvido'] %}<option value="{{ opcao }}" {{ 'selected' if situacao == opcao else '' }}>{{ opcao }}</option>{% endfor %}</select></div>
+        <div class="acoes campo-acoes"><button class="botao primario" type="submit">Filtrar</button><a class="botao secundario" href="{{ url_for('relatorios') }}">Limpar</a></div>
+    </form>
+    <div class="tabela-rolagem"><table><thead><tr><th>Usuário</th><th>Livro</th><th>Empréstimo</th><th>Prevista</th><th>Devolução</th><th>Situação</th></tr></thead><tbody>
+        {% for emprestimo in emprestimos %}<tr><td>{{ emprestimo.nome_usuario }}</td><td>{{ emprestimo.titulo_livro }}</td><td class="numero-tabela">{{ emprestimo.data_emprestimo }}</td><td class="numero-tabela">{{ emprestimo.data_prevista_devolucao }}</td><td class="numero-tabela">{{ emprestimo.data_devolucao or 'Não devolvido' }}</td><td><span class="situacao {{ obter_status(emprestimo.data_prevista_devolucao, emprestimo.data_devolucao)|lower }}">{{ obter_status(emprestimo.data_prevista_devolucao, emprestimo.data_devolucao) }}</span></td></tr>
+        {% else %}<tr><td colspan="6" class="vazio">Nenhum empréstimo encontrado neste filtro.</td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+<section class="secao">
+    <h2>Livros mais emprestados</h2>
+    <div class="tabela-rolagem"><table><thead><tr><th>Título</th><th>Autor</th><th>Total de empréstimos</th></tr></thead><tbody>
+        {% for livro in mais_emprestados %}<tr><td>{{ livro.titulo }}</td><td>{{ livro.autor }}</td><td class="numero-tabela">{{ livro.total }}</td></tr>
+        {% else %}<tr><td colspan="3" class="vazio">Nenhum livro cadastrado.</td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

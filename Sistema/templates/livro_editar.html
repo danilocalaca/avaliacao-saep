@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block titulo %}Alterar livro | Biblioteca Escolar{% endblock %}
+{% block conteudo %}
+<section class="cabecalho-pagina"><h1>Alterar livro</h1><p class="contexto-pagina">Atualize os dados deste exemplar.</p></section>
+<section class="secao secao-formulario">
+    <form method="post" class="formulario">
+        <div class="campo"><label for="titulo">Título</label><input id="titulo" name="titulo" required maxlength="200" value="{{ request.form.get('titulo', livro.titulo) }}"></div>
+        <div class="campo"><label for="autor">Autor</label><input id="autor" name="autor" required maxlength="160" value="{{ request.form.get('autor', livro.autor) }}"></div>
+        <div class="campo"><label for="categoria">Categoria</label><input id="categoria" name="categoria" required maxlength="100" value="{{ request.form.get('categoria', livro.categoria) }}"></div>
+        <div class="campo"><label for="quantidade">Quantidade disponível</label><input id="quantidade" name="quantidade" type="number" min="0" step="1" required value="{{ request.form.get('quantidade', livro.quantidade) }}"></div>
+        <div class="acoes"><button class="botao primario" type="submit">Salvar</button><a class="botao secundario" href="{{ url_for('livros') }}">Cancelar</a></div>
+    </form>
+</section>
+{% endblock %}

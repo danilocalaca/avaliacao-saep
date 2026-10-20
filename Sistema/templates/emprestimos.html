@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block titulo %}Empréstimos | Biblioteca Escolar{% endblock %}
+{% block conteudo %}
+<section class="cabecalho-pagina"><h1>Empréstimos</h1><p class="contexto-pagina">Registre saídas e acompanhe devoluções.</p></section>
+<section class="secao">
+    <h2>Novo empréstimo</h2>
+    <form method="post" class="formulario grade-formulario" data-envio-unico>
+        <div class="campo"><label for="id_usuario">Usuário</label><select id="id_usuario" name="id_usuario" required><option value="">Selecione</option>{% for usuario in usuarios %}<option value="{{ usuario.id_usuario }}">{{ usuario.nome }}</option>{% endfor %}</select></div>
+        <div class="campo"><label for="id_livro">Livro</label><select id="id_livro" name="id_livro" required><option value="">Selecione</option>{% for livro in livros %}<option value="{{ livro.id_livro }}">{{ livro.titulo }} ({{ livro.quantidade }} disponível)</option>{% endfor %}</select></div>
+        <div class="campo"><label for="data_emprestimo">Data do empréstimo</label><input id="data_emprestimo" name="data_emprestimo" type="date" required value="{{ hoje }}"></div>
+        <div class="campo"><label for="data_prevista_devolucao">Data prevista de devolução</label><input id="data_prevista_devolucao" name="data_prevista_devolucao" type="date" required min="{{ hoje }}"></div>
+        <div class="acoes campo-acoes"><button class="botao primario" type="submit">Registrar empréstimo</button></div>
+    </form>
+</section>
+<section class="secao">
+    <div class="linha-titulo"><h2>Histórico</h2>
+        <form method="get" class="busca filtro"><label for="situacao">Situação</label><select id="situacao" name="situacao"><option value="">Todas</option>{% for opcao in ['Ativo', 'Atrasado', 'Devolvido'] %}<option value="{{ opcao }}" {{ 'selected' if situacao == opcao else '' }}>{{ opcao }}</option>{% endfor %}</select><button class="botao secundario" type="submit">Filtrar</button></form>
+    </div>
+    <div class="tabela-rolagem"><table><thead><tr><th>Usuário</th><th>Livro</th><th>Empréstimo</th><th>Prevista</th><th>Devolução</th><th>Situação</th><th>Ação</th></tr></thead><tbody>
+        {% for emprestimo in emprestimos %}<tr><td>{{ emprestimo.nome_usuario }}</td><td>{{ emprestimo.titulo_livro }}</td><td class="numero-tabela">{{ emprestimo.data_emprestimo }}</td><td class="numero-tabela">{{ emprestimo.data_prevista_devolucao }}</td><td class="numero-tabela">{{ emprestimo.data_devolucao or 'Não devolvido' }}</td><td><span class="situacao {{ obter_status(emprestimo.data_prevista_devolucao, emprestimo.data_devolucao)|lower }}">{{ obter_status(emprestimo.data_prevista_devolucao, emprestimo.data_devolucao) }}</span></td><td>{% if not emprestimo.data_devolucao %}<form method="post" action="{{ url_for('devolver_emprestimo', id_emprestimo=emprestimo.id_emprestimo) }}" data-confirmar="Registrar a devolução deste livro?" data-confirmar-titulo="Confirmar devolução?"><button class="botao pequeno secundario" type="submit">Devolver</button></form>{% else %} <span class="texto-secundario">Concluído</span>{% endif %}</td></tr>
+        {% else %}<tr><td colspan="7" class="vazio">Nenhum empréstimo registrado ainda.</td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

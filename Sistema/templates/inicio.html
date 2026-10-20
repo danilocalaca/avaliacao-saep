@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block titulo %}Início | Biblioteca Escolar{% endblock %}
+{% block conteudo %}
+<section class="cabecalho-pagina">
+    <h1>Visão geral</h1>
+    <p class="contexto-pagina">Resumo do acervo e dos empréstimos.</p>
+</section>
+<section class="indicadores" aria-label="Resumo da biblioteca">
+    <div class="indicador"><span>Livros cadastrados</span><strong>{{ total_livros }}</strong></div>
+    <div class="indicador"><span>Empréstimos ativos</span><strong>{{ emprestimos_ativos }}</strong></div>
+    <div class="indicador"><span>Usuários</span><strong>{{ total_usuarios }}</strong></div>
+</section>
+{% endblock %}

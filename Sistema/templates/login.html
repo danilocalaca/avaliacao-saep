@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block titulo %}Entrar | Biblioteca Escolar{% endblock %}
+{% block conteudo %}
+<section class="login-identidade" aria-label="Sobre a biblioteca">
+    <p class="login-marca">Biblioteca<br>Escolar</p>
+    <p class="login-descricao">Consulta do acervo e registro de empréstimos.</p>
+</section>
+<section class="painel-login" aria-labelledby="titulo-login">
+    <h1 id="titulo-login">Entrar</h1>
+    <form method="post" class="formulario" data-limpar>
+        <div class="campo">
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" autocomplete="username" required value="{{ request.form.get('email', '') }}">
+        </div>
+        <div class="campo">
+            <label for="senha">Senha</label>
+            <input id="senha" name="senha" type="password" autocomplete="current-password" required>
+        </div>
+        <div class="acoes">
+            <button class="botao primario" type="submit">Entrar</button>
+            <button class="botao secundario" type="reset">Limpar</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

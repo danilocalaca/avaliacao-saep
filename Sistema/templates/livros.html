@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block titulo %}Livros | Biblioteca Escolar{% endblock %}
+{% block conteudo %}
+<section class="cabecalho-pagina"><h1>Livros</h1><p class="contexto-pagina">Cadastro e consulta do acervo.</p></section>
+<section class="secao">
+    <h2>Cadastrar livro</h2>
+    <form method="post" class="formulario grade-formulario" data-validar-livro>
+        <div class="campo"><label for="titulo">Título</label><input id="titulo" name="titulo" required maxlength="200" value="{{ request.form.get('titulo', '') }}"></div>
+        <div class="campo"><label for="autor">Autor</label><input id="autor" name="autor" required maxlength="160" value="{{ request.form.get('autor', '') }}"></div>
+        <div class="campo"><label for="categoria">Categoria</label><input id="categoria" name="categoria" required maxlength="100" value="{{ request.form.get('categoria', '') }}"></div>
+        <div class="campo"><label for="quantidade">Quantidade disponível</label><input id="quantidade" name="quantidade" type="number" min="0" step="1" required value="{{ request.form.get('quantidade', '') }}"></div>
+        <div class="acoes campo-acoes"><button class="botao primario" type="submit">Cadastrar</button><button class="botao secundario" type="reset">Limpar</button></div>
+    </form>
+</section>
+<section class="secao">
+    <div class="linha-titulo"><h2>Acervo</h2>
+        <form method="get" class="busca"><label class="sr-only" for="busca">Pesquisar por título, autor ou categoria</label><input id="busca" name="busca" type="search" placeholder="Título, autor ou categoria" value="{{ busca }}"><button class="botao secundario" type="submit">Pesquisar</button>{% if busca %}<a class="botao texto" href="{{ url_for('livros') }}">Limpar busca</a>{% endif %}</form>
+    </div>
+    <div class="tabela-rolagem"><table><thead><tr><th>Título</th><th>Autor</th><th>Categoria</th><th>Disponíveis</th><th>Ações</th></tr></thead>
+        <tbody>{% for livro in livros %}<tr><td>{{ livro.titulo }}</td><td>{{ livro.autor }}</td><td>{{ livro.categoria }}</td><td class="numero-tabela">{{ livro.quantidade }}</td><td><div class="acoes-tabela"><a class="botao pequeno secundario" href="{{ url_for('editar_livro', id_livro=livro.id_livro) }}">Alterar</a><form method="post" action="{{ url_for('excluir_livro', id_livro=livro.id_livro) }}" data-confirmar="Excluir {{ livro.titulo }} do acervo?" data-confirmar-titulo="Excluir livro?"><button class="botao pequeno perigo" type="submit">Excluir</button></form></div></td></tr>
+        {% else %}<tr><td colspan="5" class="vazio">{% if busca %}Nenhum livro encontrado. Ajuste a busca.{% else %}Nenhum livro cadastrado ainda. Use o formulário acima para cadastrar o primeiro.{% endif %}</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endblock %}
